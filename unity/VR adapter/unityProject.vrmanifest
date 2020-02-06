@@ -1,0 +1,16 @@
+{
+  "source": "Unity",
+  "applications": [
+    {
+      "app_key": "application.generated.unity.vradapter.exe",
+      "launch_type": "url",
+      "url": "steam://launch/",
+      "action_manifest_path": "C:\\Users\\Msi\\Documents\\GitHub\\rpi-vr-telepresence\\unity\\VR adapter\\actions.json",
+      "strings": {
+        "en_us": {
+          "name": "VR adapter [Testing]"
+        }
+      }
+    }
+  ]
+}
