@@ -8,7 +8,7 @@ bind_port = 9999
 
 
 buzzer = gpiozero.TonalBuzzer(21)
-led1 = gpiozero.LED(20)
+led1 = gpiozero.PWMLED(20)
 led2 = gpiozero.LED(16)
 led3 = gpiozero.LED(12)
 led4 = gpiozero.LED(17)
@@ -18,6 +18,21 @@ def on_key(key):
         key_mapping[key] = key_mapping.get(key, [])+[func]
         return func
     return decorator
+
+@on_key('Colliding')
+def on_collide(v):
+    v = int(v)
+    if v:
+        led2.on()
+    else:
+        led2.off()
+        buzzer.stop()
+
+@on_key('Y')
+def set_brightness(v):
+    v = v.replace(',','.')
+    led1.value = float(v)
+    buzzer.play(220.0 + float(v)*220.0)
 
 @on_key('LED1')
 def ledA(v):
