@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\BinaryProperty.cs" />
     <Compile Include="Assets\Scripts\DataManagerScript.cs" />
+    <Compile Include="Assets\Scripts\ThreeDPositionProperty.cs" />
     <Reference Include="Unity.Timeline.Editor">
       <HintPath>C:/Users/Msi/Documents/GitHub/rpi-vr-telepresence/unity/VR adapter/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>

@@ -87,4 +87,11 @@ public class DataManagerScript : MonoBehaviour
         this.key = null;
         this.value = null;
     }
+
+    public void Send(string key, string value)
+    {
+        SetKey(key);
+        SetValue(value);
+        Send();
+    }
 }

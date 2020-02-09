@@ -1,0 +1,2 @@
+C:\Users\Msi\Documents\GitHub\rpi-vr-telepresence\unity\VR adapter\obj\Debug\Microsoft.MixedReality.WebRTC.Unity.csprojAssemblyReference.cache
+C:\Users\Msi\Documents\GitHub\rpi-vr-telepresence\unity\VR adapter\obj\Debug\Microsoft.MixedReality.WebRTC.Unity.csproj.CoreCompileInputs.cache
