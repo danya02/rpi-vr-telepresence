@@ -932,6 +932,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: spewDebugText
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11401046, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
+      propertyPath: showDebugText
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc06161b6d97feb419f45f03b62e14b9, type: 3}
 --- !u!4 &679729313 stripped
@@ -1402,6 +1410,64 @@ MonoBehaviour:
   key: Buzzer
   value_on: 1
   value_off: 0
+--- !u!1 &1091594325
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1091594327}
+  - component: {fileID: 1091594326}
+  m_Layer: 0
+  m_Name: TriggerTransmitter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1091594326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091594325}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2fb27abe46cd334faa17c0a9ecd4490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DataManager: {fileID: 1234895973}
+  GrabPinch:
+    actionPath: /actions/default/in/GrabPinch
+    needsReinit: 0
+  Squeeze:
+    actionPath: /actions/default/in/Squeeze
+    needsReinit: 0
+  LeftHand: 1
+  RightHand: 2
+  LeftSqueezeKey: LeftSqueeze
+  RightSqueezeKey: RightSqueeze
+  LeftGrabKey: LeftGrab
+  RightGrabKey: RightGrab
+  GrabTrueValue: 1
+  GrabFalseValue: 0
+--- !u!4 &1091594327
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1091594325}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1234895971
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,7 +1511,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60c83fa4c608cca458750f57a19941e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IPAddr: 192.168.1.70
+  IPAddr: 192.168.1.77
   ConnectionProtocol: 0
   port: 9999
 --- !u!1 &1297897042
