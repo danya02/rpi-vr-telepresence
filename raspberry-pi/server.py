@@ -1,17 +1,31 @@
 import socket
 import gpiozero
 import traceback
+import serial
 
 key_mapping = dict()
 bind_ip = '0.0.0.0'
 bind_port = 9999
 
+#ser = serial.Serial('/dev/ttyACM0',19200)
 
-buzzer = gpiozero.TonalBuzzer(21)
-led1 = gpiozero.PWMLED(20)
-led2 = gpiozero.LED(16)
-led3 = gpiozero.LED(12)
-led4 = gpiozero.LED(17)
+def send_serial_cmd(key, value):
+    value = int(value)
+    key = bytes(key, 'utf8')
+    value = bytes.fromhex(hex(value)[2:].zfill(2))
+    ser.write(key)
+    ser.write(value)
+    ser.flush()
+
+
+#buzzer = gpiozero.TonalBuzzer(21)
+#led1 = gpiozero.PWMLED(20)
+#led2 = gpiozero.LED(16)
+#led3 = gpiozero.LED(12)
+#led4 = gpiozero.LED(17)
+
+base_servo = gpiozero.Servo(17)
+claw_servo = gpiozero.Servo(5) # the Klaw!
 
 def on_key(key):
     def decorator(func):
@@ -19,48 +33,80 @@ def on_key(key):
         return func
     return decorator
 
-@on_key('Colliding')
-def on_collide(v):
-    v = int(v)
-    if v:
-        led2.on()
-    else:
-        led2.off()
-        buzzer.stop()
+def lerp(v0, v1, t):
+    return v0 + t * (v1 - v0)
 
-@on_key('Y')
-def set_brightness(v):
-    v = v.replace(',','.')
-    led1.value = float(v)
-    buzzer.play(220.0 + float(v)*220.0)
+def map_value(x, in_min, in_max, out_min, out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-@on_key('LED1')
-def ledA(v):
-    print('LED1',v)
-    (led1.on if int(v) else led1.off)()
+GRABBING = False
 
-@on_key('LED2')
-def ledB(v):
-    print('LED2',v)
-    (led2.on if int(v) else led2.off)()
-
-@on_key('LED3')
-def ledC(v):
-    print('LED3',v)
-    (led3.on if int(v) else led3.off)()
-
-@on_key('LED4')
-def ledD(v):
-    print('LED4',v)
-    (led4.on if int(v) else led4.off)()
-
-
-@on_key('Buzzer')
-def buzz(v):
+@on_key('RightGrab')
+def grab(v):
+    global GRABBING
     if int(v):
-        buzzer.play(440.0)
+        GRABBING = True
+        #send_serial_cmd('K',0)
+        claw_servo.value = -1
     else:
-        buzzer.stop()
+        GRABBING = False
+
+@on_key('Z')
+def base_rotation(v):
+    v = float(v.replace(',', '.'))
+    base_servo.value = v*2-1
+#    a = lerp(0,180,v)
+#    send_serial_cmd('B', a)
+
+@on_key('RightSqueeze')
+def squeeze(v):
+    v = 1 - float(v.replace(',', '.'))
+    if not GRABBING:
+        #send_serial_cmd('K', lerp(60, 110, v))
+        claw_servo.value = map_value(v, 0, 1, -0.8, 0.5)
+
+#@on_key('Colliding')
+#def on_collide(v):
+#    v = int(v)
+#    if v:
+#        led2.on()
+#    else:
+#        led2.off()
+#        buzzer.stop()
+
+#@on_key('Y')
+#def set_brightness(v):
+#    v = v.replace(',','.')
+#    led1.value = float(v)
+#    buzzer.play(220.0 + float(v)*220.0)
+
+#@on_key('LED1')
+#def ledA(v):
+#    print('LED1',v)
+#    (led1.on if int(v) else led1.off)()
+
+#@on_key('LED2')
+#def ledB(v):
+#    print('LED2',v)
+#    (led2.on if int(v) else led2.off)()
+
+#@on_key('LED3')
+#def ledC(v):
+#    print('LED3',v)
+#    (led3.on if int(v) else led3.off)()
+
+#@on_key('LED4')
+#def ledD(v):
+#    print('LED4',v)
+#    (led4.on if int(v) else led4.off)()
+
+
+#@on_key('Buzzer')
+#def buzz(v):
+#    if int(v):
+#        buzzer.play(440.0)
+#    else:
+#        buzzer.stop()
 
 
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
