@@ -2,6 +2,8 @@ import socket
 import gpiozero
 import traceback
 import serial
+#from mearm import meArm
+import time
 
 key_mapping = dict()
 bind_ip = '0.0.0.0'
@@ -19,13 +21,19 @@ def send_serial_cmd(key, value):
 
 
 #buzzer = gpiozero.TonalBuzzer(21)
-#led1 = gpiozero.PWMLED(20)
-#led2 = gpiozero.LED(16)
-#led3 = gpiozero.LED(12)
-#led4 = gpiozero.LED(17)
+led1 = gpiozero.PWMLED(23)
+led2 = gpiozero.LED(24)
+led3 = gpiozero.LED(25)
+led4 = gpiozero.LED(8)
 
 base_servo = gpiozero.Servo(17)
 claw_servo = gpiozero.Servo(5) # the Klaw!
+arm_maj_servo = gpiozero.Servo(27)
+arm_min_servo = gpiozero.Servo(22)
+
+
+#arm = meArm.meArm()
+#arm.begin()
 
 def on_key(key):
     def decorator(func):
@@ -47,58 +55,80 @@ def grab(v):
     if int(v):
         GRABBING = True
         #send_serial_cmd('K',0)
+#        arm.setClaw(-1)
         claw_servo.value = -1
     else:
         GRABBING = False
 
 @on_key('Z')
-def base_rotation(v):
+def zcoord(v):
     v = float(v.replace(',', '.'))
-    base_servo.value = v*2-1
+#    arm.nz=v
+#    if time.time()-last_upd>0.1:
+#        arm.goDirectlyTo(arm.nx+ox, arm.ny+oy, arm.nz+oz)
+#        global last_upd
+#        last_upd = time.time()
+
 #    a = lerp(0,180,v)
 #    send_serial_cmd('B', a)
+    base_servo.value = v
+
+@on_key('Y')
+def ycoord(v):
+    v = float(v.replace(',', '.'))
+#    arm.ny = v
+    arm_maj_servo.value = v
+
+@on_key('X')
+def xcoord(v):
+    v = float(v.replace(',', '.'))
+#    arm.nx = v
+    arm_min_servo.value = v
 
 @on_key('RightSqueeze')
 def squeeze(v):
     v = 1 - float(v.replace(',', '.'))
     if not GRABBING:
         #send_serial_cmd('K', lerp(60, 110, v))
-        claw_servo.value = map_value(v, 0, 1, -0.8, 0.5)
+        claw_servo.value = (map_value(v, 0, 1, -0.8, 0.5))
 
-#@on_key('Colliding')
-#def on_collide(v):
-#    v = int(v)
-#    if v:
-#        led2.on()
-#    else:
-#        led2.off()
+@on_key('Colliding')
+def on_collide(v):
+    v = int(v)
+    if v:
+        led2.on()
+    else:
+        base_servo.detach()
+        arm_maj_servo.detach()
+        arm_min_servo.detach()
+        led2.off()
 #        buzzer.stop()
 
-#@on_key('Y')
-#def set_brightness(v):
-#    v = v.replace(',','.')
-#    led1.value = float(v)
+@on_key('Y')
+def set_brightness(v):
+    v = v.replace(',','.')
+    led1.value = float(v)
 #    buzzer.play(220.0 + float(v)*220.0)
 
-#@on_key('LED1')
-#def ledA(v):
-#    print('LED1',v)
-#    (led1.on if int(v) else led1.off)()
+@on_key('LED1')
+def ledA(v):
+    print('LED1',v)
+    (led1.on if int(v) else led1.off)()
 
-#@on_key('LED2')
-#def ledB(v):
-#    print('LED2',v)
-#    (led2.on if int(v) else led2.off)()
+@on_key('LED2')
+def ledB(v):
+    print('LED2',v)
+    (led2.on if int(v) else led2.off)()
 
-#@on_key('LED3')
-#def ledC(v):
-#    print('LED3',v)
-#    (led3.on if int(v) else led3.off)()
+@on_key('LED3')
+def ledC(v):
+    print('LED3',v)
+    (led3.on if int(v) else led3.off)()
 
-#@on_key('LED4')
-#def ledD(v):
-#    print('LED4',v)
-#    (led4.on if int(v) else led4.off)()
+@on_key('LED4')
+def ledD(v):
+    print('LED4',v)
+    (led4.on if int(v) else led4.off)()
 
 
 #@on_key('Buzzer')
