@@ -21,8 +21,8 @@ def send_serial_cmd(key, value):
 
 
 #buzzer = gpiozero.TonalBuzzer(21)
-led1 = gpiozero.PWMLED(23)
-led2 = gpiozero.LED(24)
+#led1 = gpiozero.PWMLED(23)
+led2 = gpiozero.LED(23)
 led3 = gpiozero.LED(25)
 led4 = gpiozero.LED(8)
 
@@ -71,19 +71,19 @@ def zcoord(v):
 
 #    a = lerp(0,180,v)
 #    send_serial_cmd('B', a)
-    base_servo.value = v
+    base_servo.value = map_value(v,0,1,-1,1)
 
 @on_key('Y')
 def ycoord(v):
     v = float(v.replace(',', '.'))
 #    arm.ny = v
-    arm_maj_servo.value = v
+    arm_min_servo.value = map_value(v,0,1,-1,1)
 
 @on_key('X')
 def xcoord(v):
     v = float(v.replace(',', '.'))
 #    arm.nx = v
-    arm_min_servo.value = v
+    arm_maj_servo.value = map_value(v,0,1,-1,1)
 
 @on_key('RightSqueeze')
 def squeeze(v):
