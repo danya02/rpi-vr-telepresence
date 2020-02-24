@@ -9,24 +9,28 @@ key_mapping = dict()
 bind_ip = '0.0.0.0'
 bind_port = 9999
 
-#ser = serial.Serial('/dev/ttyACM0',19200)
+ser = serial.Serial('/dev/ttyACM0',19200)
+last_sent = 0
 
 def send_serial_cmd(key, value):
-    value = int(value)
-    key = bytes(key, 'utf8')
-    value = bytes.fromhex(hex(value)[2:].zfill(2))
-    ser.write(key)
-    ser.write(value)
-    ser.flush()
+    if time.time()-last_sent>0.1:
+        global last_sent
+        last_sent = time.time()
+        value = int(value)
+        key = bytes(key, 'utf8')
+        value = bytes.fromhex(hex(value)[2:].zfill(2))
+        ser.write(key)
+        ser.write(value)
+        ser.flush()
 
 
 #buzzer = gpiozero.TonalBuzzer(21)
 #led1 = gpiozero.PWMLED(23)
-led2 = gpiozero.LED(23)
+#led2 = gpiozero.LED(23)
 led3 = gpiozero.LED(25)
 led4 = gpiozero.LED(8)
 
-base_servo = gpiozero.Servo(17)
+#base_servo = gpiozero.Servo(17)
 claw_servo = gpiozero.Servo(5) # the Klaw!
 arm_maj_servo = gpiozero.Servo(27)
 arm_min_servo = gpiozero.Servo(22)
@@ -69,9 +73,9 @@ def zcoord(v):
 #        global last_upd
 #        last_upd = time.time()
 
-#    a = lerp(0,180,v)
-#    send_serial_cmd('B', a)
-    base_servo.value = map_value(v,0,1,-1,1)
+    a = lerp(0,180,v)
+    send_serial_cmd('K', a)
+#    base_servo.value = map_value(v,0,1,-1,1)
 
 @on_key('Y')
 def ycoord(v):
@@ -98,9 +102,9 @@ def on_collide(v):
     if v:
         led2.on()
     else:
-        base_servo.detach()
-        arm_maj_servo.detach()
-        arm_min_servo.detach()
+#        base_servo.detach()
+#        arm_maj_servo.detach()
+#        arm_min_servo.detach()
         led2.off()
 #        buzzer.stop()
 
